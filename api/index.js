@@ -22,7 +22,7 @@ const config = require('../config.js');
 
 if (config.isVercel) {
     app.use(async (req, res, next) => {
-        await mongoose.connect(config.mongoUri, config.mongoOptions);
+        await mongoose.connect(config.mongodb.uri);
         return next();
     });
     const serviceAccount = JSON.parse(

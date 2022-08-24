@@ -50,7 +50,9 @@ dotenv.config()
 app.use(cors())
 app.use(express.json());
 
-app.use('/api/v1/activities', authMiddleware, activityRouter);
+app.use('/api/v1/activities',
+    // authMiddleware, 
+    activityRouter);
 app.use('/api/v1/users', authMiddleware, userRouter);
 app.use('/api/v1/aggregates',
     authMiddleware,

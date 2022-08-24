@@ -1,21 +1,52 @@
 const dotenv = require('dotenv')
-dotenv.config()
 
+const { default: mongoose } = require('mongoose');
 
-
-
+require('../src/libs/firebase.js')
 
 const express = require('express');
-const activityRouter = require('./src/api/activities/activities.route');
-const userRouter = require('./src/api/users/users.route');
-const sum = require('./src/api/aggregates/aggregates.route')
-const authMiddleware = require('./src/middleware/authentication')
+
+const activityRouter = require('../src/api/activities/activities.route');
+const userRouter = require('../src/api/users/users.route');
+const sum = require('../src/api/aggregates/aggregates.route')
+const authMiddleware = require('../src/middleware/authentication')
 const cors = require('cors')
-const PORT = 8080;
+
 
 const app = express();
 
 
+const admin = require("firebase-admin")
+const config = require('../config.js');
+// const PORT = 8080;
+
+if (config.isVercel) {
+    app.use(async (req, res, next) => {
+        await mongoose.connect(config.mongoUri, config.mongoOptions);
+        return next();
+    });
+    const serviceAccount = JSON.parse(
+        process.env.GOOGLE_APPLICATION_CREDENTIALS
+    );
+
+
+
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+
+    })
+
+
+}
+
+
+
+
+
+
+
+
+dotenv.config()
 app.use(cors())
 app.use(express.json());
 
@@ -25,9 +56,16 @@ app.use('/api/v1/aggregates',
     authMiddleware,
     sum);
 
+// const serviceAccount = JSON.parse(
+//     process.env.GOOGLE_APPLICATION_CREDENTIALS
+// );
 
-const config = require('./config');
-const { default: mongoose } = require('mongoose');
-require('./src/libs/firebase')
+
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+
+// })
+
 
 module.exports = app;

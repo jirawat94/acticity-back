@@ -64,8 +64,8 @@ module.exports = {
   //   }
   // },
   async getActivities(req, res) {
-    // const activities = await ActivityModel.findByUserEmail(req.user.email);
-    const activities = await ActivityModel.find();
+    const activities = await ActivityModel.findByUserEmail(req.user.email);
+
     if ("type" in req.query) {
       const activity = await ActivityModel.find({ "type": req.query.type })
       return responseSuccess(req, res, activity)

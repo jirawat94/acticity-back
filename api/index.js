@@ -29,19 +29,11 @@ if (config.isVercel) {
         process.env.GOOGLE_APPLICATION_CREDENTIALS
     );
 
-
-
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
 
-    })
-
-
+    });
 }
-
-
-
-
 
 
 
@@ -51,7 +43,7 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/api/v1/activities',
-    // authMiddleware, 
+    authMiddleware,
     activityRouter);
 app.use('/api/v1/users', authMiddleware, userRouter);
 app.use('/api/v1/aggregates',
